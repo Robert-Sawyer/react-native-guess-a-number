@@ -8,6 +8,8 @@ const StartGameScreen = props => {
 
     //tworzę obsługę walidacji dla wprowadzanej wartości na androidzie
     const [enteredValue, setEnteredValue] = useState('')
+    const [confirmed, setConfirmed] = useState(false)
+    const [selectedNumber, setSelectedNumber] = useState()
 
     //metoda do walidacji wprowadzanych danych - wpisaną przez usera wartość zamieniam dzięki .replace():
     //jeśli user wprowadził do inputa cokolwiek innego niż cyfry od 0 do 9, np, przecinek, lub kropkę, to zamień tę
@@ -20,6 +22,27 @@ const StartGameScreen = props => {
     //Keyboard to nie komponent tylko interfejs API który dostarcza React Native by kontrolować klawiaturę
     const handleCloseKeyboard = () => {
         Keyboard.dismiss()
+    }
+
+    const handleResetInput = () => {
+        setEnteredValue('')
+        setConfirmed(false)
+    }
+
+    const handleConfirmInput = () => {
+        const chosenNumber = parseInt(enteredValue)
+        if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+            return;
+        }
+        setConfirmed(true)
+        setSelectedNumber(chosenNumber)
+        setEnteredValue('')
+    }
+
+    let confirmedOutput;
+
+    if (confirmed) {
+        confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>
     }
 
     return (
@@ -44,15 +67,22 @@ const StartGameScreen = props => {
                     />
                     <View style={styles.buttonContainer}>
                         <View style={styles.button}>
-                            <Button title='Reset' color={Colors.cancelOrReset} onPress={() => {
-                            }}/>
+                            <Button
+                                title='Reset'
+                                color={Colors.cancelOrReset}
+                                onPress={handleResetInput}
+                            />
                         </View>
                         <View style={styles.button}>
-                            <Button title='Confirm' color={Colors.confirmColor} onPress={() => {
-                            }}/>
+                            <Button
+                                title='Confirm'
+                                color={Colors.confirmColor}
+                                onPress={handleConfirmInput}
+                            />
                         </View>
                     </View>
                 </Card>
+                {confirmedOutput}
             </View>
         </TouchableWithoutFeedback>
     )
