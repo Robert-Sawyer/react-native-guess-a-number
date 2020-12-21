@@ -1,7 +1,8 @@
 import React from 'react'
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native'
+import {View, Text, StyleSheet, Button} from 'react-native'
 import Card from "../components/Card";
 import Colors from '../constants/colors'
+import Input from "../components/Input";
 
 const StartGameScreen = props => {
     return (
@@ -10,7 +11,17 @@ const StartGameScreen = props => {
             {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
             <Card style={styles.inputContainer}>
                 <Text>Select a number</Text>
-                <TextInput/>
+                {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
+                danych - wszystko w dokumentacji. Poniżej wykorzystam tylko rodzaj klawiatury, wyłączenie autokorekty,
+                rozmycie po kliknięciu i ograniczenie liczby do 99*/}
+                <Input
+                    style={styles.input}
+                    blurOnSubmit
+                    keyboardType='number-pad'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    maxLength={2}
+                />
                 <View style={styles.buttonContainer}>
                     <View style={styles.button}>
                         <Button title='Reset' color={Colors.cancelOrReset} onPress={() => {}}/>
@@ -38,6 +49,10 @@ const styles = StyleSheet.create({
         width: 300,
         maxWidth: '80%',
         alignItems: 'center',
+    },
+    input: {
+        width: 50,
+        textAlign: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',
