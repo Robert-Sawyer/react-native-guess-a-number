@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Button, TouchableWithoutFeedback, Keyboard, Aler
 import Card from "../components/Card";
 import Colors from '../constants/colors'
 import Input from "../components/Input";
+import NumberContainer from "../components/NumberContainer";
 
 const StartGameScreen = props => {
 
@@ -29,6 +30,11 @@ const StartGameScreen = props => {
         setConfirmed(false)
     }
 
+    //ustawiam tutaj wybrany numer czyli efekt po kliknięciu CONFIRM. najpierw parsuję liczbę na int, potem sprawdzam
+    //czy na pewno jest liczbą, czy zawiera się w dopuszczelnym zakresie, a jeśli nie, to wyświetlam alert wosobnym
+    //okienku. alert() - pierwszy argument to tytuł alertu, drugi komunikat, a trzeci to obiekt zawierający informacje
+    //o rodzaju przycisku zamykającego: jego treści, ostylowaniu i reakcji na klikięcie
+    //po walidaji ustawiam decyzję o potwierdzeniu, ustawiam ostatecznie wybraną liczbę i resetuję wartość w inpucie
     const handleConfirmInput = () => {
         const chosenNumber = parseInt(enteredValue)
         if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
@@ -45,12 +51,20 @@ const StartGameScreen = props => {
         setConfirmed(true)
         setSelectedNumber(chosenNumber)
         setEnteredValue('')
+        Keyboard.dismiss()
     }
 
+    //to info w postaci tekstu który wyświetli się pod card po kliknięciu w CONFIRM
     let confirmedOutput;
-
     if (confirmed) {
-        confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>
+        confirmedOutput =
+            <Card style={styles.confirmationInfo}>
+                <Text style={styles.confirmationText}>You choose:</Text>
+                <NumberContainer>{selectedNumber}</NumberContainer>
+                <View style={styles.startButton}>
+                    <Button title="LET'S PLAY" color={Colors.headerColor}/>
+                </View>
+            </Card>
     }
 
     return (
@@ -123,6 +137,19 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '40%',
+    },
+    confirmationInfo: {
+        marginVertical: 20,
+        width: '60%',
+        alignItems: 'center',
+    },
+    confirmationText: {
+        fontSize: 18,
+    },
+    startButton: {
+        marginVertical: 10,
+        justifyContent: 'center',
+        width: '65%',
     },
 })
 
