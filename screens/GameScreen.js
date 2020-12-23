@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {View, Text, StyleSheet, Button} from 'react-native'
+import React, {useState, useRef} from 'react'
+import {View, Text, StyleSheet, Button, Alert} from 'react-native'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 
@@ -17,13 +17,43 @@ const generateRandomBetween = (min, max, exclude) => {
 const GameScreen = props => {
     const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, props.userChoice))
 
+    const currentLow = useRef(1)
+    const currentHigh = useRef(100)
+
+    const handleNextGuess = direction => {
+        if (direction === 'lower' && currentGuess < props.userChoice ||
+            direction === 'greater' && currentGuess > props.userChoice) {
+            Alert.alert(
+                "Don't lie",
+                'You know that this is wrong',
+                [{
+                    text: 'Sorry!',
+                    style: 'cancel'
+                }]
+            )
+            return;
+        }
+        if (direction === 'lower') {
+            currentHigh.current = currentGuess
+        } else {
+            currentLow.current = currentGuess
+        }
+        //to co tu się dzieje to useRef zapisuje liczbę wylosowaną przez komputer i w zależności, czy user wybrał
+        //mniejszą lub większą liczbę losuje tylko z tego nowego zakresu, jaki definiuje wylosowana liczba -
+        //jeśli wybrał 50 a komputer wylosował 60 to 60 staje się nowym maximum w losowanych liczbach w nastepnym
+        //kroku i analogicznie tak samo minimum, w dodatku eliminując z losowania poprzednią liczbę.
+        //useRef zapisuje liczbę nawet w przypadku rerendowania się komponentu i zapisuje ją bez resetowania
+        const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess)
+        setCurrentGuess(nextNumber)
+    }
+
     return (
         <View style={styles.screen}>
             <Text>Opponent's guess</Text>
             <NumberContainer>{currentGuess}</NumberContainer>
             <Card style={styles.buttonContainer}>
-                <Button title='LOWER' onPress={() => {}}/>
-                <Button title='GREATER' onPress={() => {}}/>
+                <Button title='LOWER' onPress={handleNextGuess.bind(this, 'lower')}/>
+                <Button title='GREATER' onPress={handleNextGuess.bind(this, 'greater')}/>
             </Card>
         </View>
     )
