@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {View, Text, StyleSheet, Button, Alert} from 'react-native'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -16,9 +16,26 @@ const generateRandomBetween = (min, max, exclude) => {
 
 const GameScreen = props => {
     const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, props.userChoice))
+    const [rounds, setRounds] = useState(0)
 
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
+
+    //destrukturyzuję propsy, by używać potem pobranych z props właściwości bez props. Robię to po to, by móc
+    //dodac zależności w useEffect
+    const {userChoice, onGameOver} = props
+
+    //useEffect przyjmuje funkcję i będzie uruchamiać się po każdym cykl renderowania komponentu. w momencie gdy
+    //komponent się odświeży / zostanie ponownie zrenderowany, useEffect uruchomi się na nowo
+    useEffect(() => {
+        //jeśli komputer zgadł liczbę to czas wywołać funkcję w App.js - game over która wyświetli ekran koncowy
+        if (currentGuess === userChoice) {
+            //przekazuję liczbę rund jakich potrzebował komputer do zgadniecia do funkcji w app.js
+            onGameOver(rounds)
+        }
+        //jeśli coś z tablicy zależności ulegnie zmianie, komponent zostanie zrenderowany na nowo / uruchomi
+        // się useEffect
+    }, [currentGuess, userChoice, onGameOver]);
 
     const handleNextGuess = direction => {
         if (direction === 'lower' && currentGuess < props.userChoice ||
@@ -45,6 +62,7 @@ const GameScreen = props => {
         //useRef zapisuje liczbę nawet w przypadku rerendowania się komponentu i zapisuje ją bez resetowania
         const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess)
         setCurrentGuess(nextNumber)
+        setRounds(currentRound => currentRound + 1)
     }
 
     return (
