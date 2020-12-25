@@ -39,8 +39,8 @@ const StartGameScreen = props => {
         const chosenNumber = parseInt(enteredValue)
         if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
             Alert.alert(
-                'Invalid number',
-                'Number has to be a number between 0 and 99',
+                'Nieprawidłowa liczba',
+                'Liczba powinna zawierać się w zakresie od 1 do 99',
                 [{
                     text: 'OK',
                     style: 'destructive',
@@ -59,11 +59,11 @@ const StartGameScreen = props => {
     if (confirmed) {
         confirmedOutput =
             <Card style={styles.confirmationInfo}>
-                <Text style={styles.confirmationText}>You choose:</Text>
+                <Text style={styles.confirmationText}>Wybrałeś/aś:</Text>
                 <NumberContainer>{selectedNumber}</NumberContainer>
                 <View style={styles.startButton}>
                     <Button
-                        title="LET'S PLAY"
+                        title="ZAGRAJMY"
                         color={Colors.headerColor}
                         onPress={() => props.onStartGame(selectedNumber)}
                     />
@@ -74,10 +74,10 @@ const StartGameScreen = props => {
     return (
         <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
             <View style={styles.screen}>
-                <Text style={styles.title}>Start the game!</Text>
+                <Text style={styles.title}>Zagrajmy w grę!</Text>
                 {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
                 <Card style={styles.inputContainer}>
-                    <Text>Select a number</Text>
+                    <Text>Wybierz od 1 do 99</Text>
                     {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
                 danych - wszystko w dokumentacji. Poniżej wykorzystam tylko rodzaj klawiatury, wyłączenie autokorekty,
                 rozmycie po kliknięciu i ograniczenie liczby do 99*/}
@@ -101,7 +101,7 @@ const StartGameScreen = props => {
                         </View>
                         <View style={styles.button}>
                             <Button
-                                title='Confirm'
+                                title='Potwierdź'
                                 color={Colors.confirmColor}
                                 onPress={handleConfirmInput}
                             />
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     button: {
-        width: '40%',
+        width: '46%',
     },
     confirmationInfo: {
         marginVertical: 20,
