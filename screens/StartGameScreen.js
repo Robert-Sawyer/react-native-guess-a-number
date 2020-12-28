@@ -4,6 +4,8 @@ import Card from "../components/Card";
 import Colors from '../constants/colors'
 import Input from "../components/Input";
 import NumberContainer from "../components/NumberContainer";
+import DefaultStyles from '../constants/default-styles'
+
 
 const StartGameScreen = props => {
 
@@ -59,7 +61,7 @@ const StartGameScreen = props => {
     if (confirmed) {
         confirmedOutput =
             <Card style={styles.confirmationInfo}>
-                <Text style={styles.confirmationText}>Wybrałeś/aś:</Text>
+                <Text style={DefaultStyles.bodyText}>Wybrałeś/aś:</Text>
                 <NumberContainer>{selectedNumber}</NumberContainer>
                 <View style={styles.startButton}>
                     <Button
@@ -74,10 +76,10 @@ const StartGameScreen = props => {
     return (
         <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
             <View style={styles.screen}>
-                <Text style={styles.title}>Zagrajmy w grę!</Text>
+                <Text style={DefaultStyles.title}>Zagrajmy w grę!</Text>
                 {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
                 <Card style={styles.inputContainer}>
-                    <Text>Wybierz od 1 do 99</Text>
+                    <Text style={DefaultStyles.bodyText}>Wybierz od 1 do 99</Text>
                     {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
                 danych - wszystko w dokumentacji. Poniżej wykorzystam tylko rodzaj klawiatury, wyłączenie autokorekty,
                 rozmycie po kliknięciu i ograniczenie liczby do 99*/}
@@ -120,11 +122,6 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center',
     },
-    title: {
-        fontSize: 20,
-        marginVertical: 10,
-        fontFamily: 'open-sans-bold',
-    },
     inputContainer: {
         width: 300,
         maxWidth: '80%',
@@ -147,9 +144,6 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         width: '60%',
         alignItems: 'center',
-    },
-    confirmationText: {
-        fontSize: 18,
     },
     startButton: {
         marginVertical: 10,
