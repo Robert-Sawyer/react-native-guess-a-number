@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import {View, Text, StyleSheet, Button, Alert} from 'react-native'
+import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import DefaultStyles from '../constants/default-styles'
@@ -76,6 +77,10 @@ const GameScreen = props => {
                 <MyButton
                     style={styles.firstButton}
                     onPress={handleNextGuess.bind(this, 'lower')}>
+                    {/*w taki sposób mogę dodawać ikon do aplikacji - importuję odpowiedni zbiór z
+                    expo/vertical-icons i korzystając z dokumentacji wybieram nazwę ikony oraz
+                     np. wielkość i kolor*/}
+                    {/*<AntDesign name="caretdown" size={18}/> */}
                     MNIEJSZA
                 </MyButton>
                 <MyButton style={styles.secButton} onPress={handleNextGuess.bind(this, 'greater')}>
