@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Text, StyleSheet, Button, Image} from 'react-native'
 import DefaultStyles from '../constants/default-styles'
+import Color from '../constants/colors'
 
 
 const GameOverScreen = props => {
@@ -19,8 +20,17 @@ const GameOverScreen = props => {
                     // fadeDuration={1000}
                 />
             </View>
-            <Text style={DefaultStyles.bodyText}>Liczba rund: {props.roundsNumber}</Text>
-            <Text style={DefaultStyles.bodyText}>Twoją liczbą było: {props.userNumber}</Text>
+            <View style={styles.textContainer}>
+                {/*Jeśli zagnieździłbym Text wewnątrz innego komponentu Text to wtedy style w tym wewnątrz
+            zostałyby odziedziczone od rodzica. Jest to wyjątek w ReactNative, ponieważ generalnie
+            style nie są w RN dziedziczone np z View na Text w środku*/}
+                <Text style={DefaultStyles.bodyText}>
+                    Potrzebowałem <Text style={styles.highlighted}>{props.roundsNumber}</Text> rund, żeby odgadnąć Twój numer
+                </Text>
+                <Text style={DefaultStyles.bodyText}>
+                    Twoją liczbą było: <Text style={styles.highlighted}>{props.userNumber}</Text>
+                </Text>
+            </View>
             <Button title="NOWA GRA" onPress={props.onRestart}/>
         </View>
     )
@@ -44,6 +54,14 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: '100%',
+    },
+    textContainer: {
+        width: '80%',
+        textAlign: 'center',
+    },
+    highlighted: {
+        color: Color.headerColor,
+        fontWeight: 'bold',
     },
 })
 

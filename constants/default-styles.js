@@ -5,6 +5,7 @@ export default StyleSheet.create({
         fontFamily: 'open-sans',
         fontSize: 16,
         marginVertical: 5,
+        textAlign: 'center',
     },
     title: {
         fontFamily: 'open-sans-bold',
