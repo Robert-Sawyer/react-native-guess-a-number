@@ -5,6 +5,7 @@ import Colors from '../constants/colors'
 import Input from "../components/Input";
 import NumberContainer from "../components/NumberContainer";
 import DefaultStyles from '../constants/default-styles'
+import MyButton from "../components/MyButton";
 
 
 const StartGameScreen = props => {
@@ -64,11 +65,10 @@ const StartGameScreen = props => {
                 <Text style={DefaultStyles.bodyText}>Wybrałeś/aś:</Text>
                 <NumberContainer>{selectedNumber}</NumberContainer>
                 <View style={styles.startButton}>
-                    <Button
-                        title="ZAGRAJMY"
-                        color={Colors.headerColor}
-                        onPress={() => props.onStartGame(selectedNumber)}
-                    />
+                    <MyButton
+                        onPress={() => props.onStartGame(selectedNumber)}>ZAGRAJMY
+                    </MyButton>
+
                 </View>
             </Card>
     }
@@ -79,7 +79,7 @@ const StartGameScreen = props => {
                 <Text style={DefaultStyles.title}>Zagrajmy w grę!</Text>
                 {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
                 <Card style={styles.inputContainer}>
-                    <Text style={DefaultStyles.bodyText}>Wybierz od 1 do 99</Text>
+                    <Text style={DefaultStyles.bodyText}>Wybierz liczbę od 1 do 99</Text>
                     {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
                 danych - wszystko w dokumentacji. Poniżej wykorzystam tylko rodzaj klawiatury, wyłączenie autokorekty,
                 rozmycie po kliknięciu i ograniczenie liczby do 99*/}
@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
     startButton: {
         marginVertical: 10,
         justifyContent: 'center',
-        width: '65%',
+        alignItems: 'center',
+        width: '100%',
     },
 })
 

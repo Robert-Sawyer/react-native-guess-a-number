@@ -2,6 +2,7 @@ import React from 'react'
 import {View, Text, StyleSheet, Button, Image} from 'react-native'
 import DefaultStyles from '../constants/default-styles'
 import Color from '../constants/colors'
+import MyButton from "../components/MyButton";
 
 
 const GameOverScreen = props => {
@@ -31,7 +32,7 @@ const GameOverScreen = props => {
                     Twoją liczbą było: <Text style={styles.highlighted}>{props.userNumber}</Text>
                 </Text>
             </View>
-            <Button title="NOWA GRA" onPress={props.onRestart}/>
+            <MyButton onPress={props.onRestart}>NOWA GRA</MyButton>
         </View>
     )
 }

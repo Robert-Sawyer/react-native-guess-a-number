@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Button, Alert} from 'react-native'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import DefaultStyles from '../constants/default-styles'
+import MyButton from "../components/MyButton";
 
 const generateRandomBetween = (min, max, exclude) => {
     min = Math.ceil(min)
@@ -72,8 +73,14 @@ const GameScreen = props => {
             <NumberContainer>{currentGuess}</NumberContainer>
             <Text style={DefaultStyles.bodyText}>Czy Twoja liczba jest:</Text>
             <Card style={styles.buttonContainer}>
-                <Button title='MNIEJSZA' onPress={handleNextGuess.bind(this, 'lower')}/>
-                <Button title='WIĘKSZA' onPress={handleNextGuess.bind(this, 'greater')}/>
+                <MyButton
+                    style={styles.firstButton}
+                    onPress={handleNextGuess.bind(this, 'lower')}>
+                    MNIEJSZA
+                </MyButton>
+                <MyButton style={styles.secButton} onPress={handleNextGuess.bind(this, 'greater')}>
+                    WIĘKSZA
+                </MyButton>
             </Card>
         </View>
     )
@@ -86,11 +93,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonContainer: {
-      flexDirection: 'row',
+        flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 10,
-        width: 300,
-        maxWidth: '80%',
+        width: 350,
+        maxWidth: '90%',
+    },
+    firstButton: {
+        backgroundColor: '#de464b',
+        paddingHorizontal: 20,
+        width: 130,
+    },
+    secButton: {
+        backgroundColor: '#296bde',
+        paddingHorizontal: 20,
+        width: 130,
     },
 })
 
