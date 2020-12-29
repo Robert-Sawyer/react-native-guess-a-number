@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
-import {View, Text, StyleSheet, Button, Alert} from 'react-native'
+import {View, Text, StyleSheet, Button, Alert, ScrollView} from 'react-native'
 import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -17,9 +17,20 @@ const generateRandomBetween = (min, max, exclude) => {
     }
 }
 
+const renderListItem = (value, numOfRounds) => (
+    <View key={value} style={styles.listItem}>
+        <Text style={DefaultStyles.bodyText}>Runda: {numOfRounds}</Text>
+        <Text style={DefaultStyles.bodyText}>{value}</Text>
+    </View>
+)
+
+
 const GameScreen = props => {
-    const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, props.userChoice))
-    const [rounds, setRounds] = useState(0)
+    //ustawiam zmienną do któej wrzucam pierwsze zgadywanie przez komputer i ustawiam jako aktualne zgadywanie
+    //oraz pierwotny stan w tablicy z poprzednimi zgadnięciami
+    const initialGuess = generateRandomBetween(1, 100, props.userChoice)
+    const [currentGuess, setCurrentGuess] = useState(initialGuess)
+    const [pastGuesses, setPastGuesses] = useState([initialGuess])
 
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
@@ -34,7 +45,7 @@ const GameScreen = props => {
         //jeśli komputer zgadł liczbę to czas wywołać funkcję w App.js - game over która wyświetli ekran koncowy
         if (currentGuess === userChoice) {
             //przekazuję liczbę rund jakich potrzebował komputer do zgadniecia do funkcji w app.js
-            onGameOver(rounds)
+            onGameOver(pastGuesses.length)
         }
         //jeśli coś z tablicy zależności ulegnie zmianie, komponent zostanie zrenderowany na nowo / uruchomi
         // się useEffect
@@ -56,7 +67,7 @@ const GameScreen = props => {
         if (direction === 'lower') {
             currentHigh.current = currentGuess
         } else {
-            currentLow.current = currentGuess
+            currentLow.current = currentGuess + 1
         }
         //to co tu się dzieje to useRef zapisuje liczbę wylosowaną przez komputer i w zależności, czy user wybrał
         //mniejszą lub większą liczbę losuje tylko z tego nowego zakresu, jaki definiuje wylosowana liczba -
@@ -65,7 +76,8 @@ const GameScreen = props => {
         //useRef zapisuje liczbę nawet w przypadku rerendowania się komponentu i zapisuje ją bez resetowania
         const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess)
         setCurrentGuess(nextNumber)
-        setRounds(currentRound => currentRound + 1)
+        // setRounds(currentRound => currentRound + 1)
+        setPastGuesses(currentPastGuesses => [nextNumber, ...currentPastGuesses])
     }
 
     return (
@@ -77,7 +89,7 @@ const GameScreen = props => {
                 <MyButton
                     style={styles.firstButton}
                     onPress={handleNextGuess.bind(this, 'lower')}>
-                    {/*w taki sposób mogę dodawać ikon do aplikacji - importuję odpowiedni zbiór z
+                    {/*w taki sposób mogę dodawać ikony do aplikacji - importuję odpowiedni zbiór z
                     expo/vertical-icons i korzystając z dokumentacji wybieram nazwę ikony oraz
                      np. wielkość i kolor*/}
                     {/*<AntDesign name="caretdown" size={18}/> */}
@@ -87,6 +99,12 @@ const GameScreen = props => {
                     WIĘKSZA
                 </MyButton>
             </Card>
+            <View style={styles.list}>
+                <ScrollView>
+                    {pastGuesses.map((guess, index) =>
+                        renderListItem(guess, pastGuesses.length - index))}
+                </ScrollView>
+            </View>
         </View>
     )
 }
@@ -113,6 +131,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#296bde',
         paddingHorizontal: 20,
         width: 130,
+    },
+    list: {
+        width: '70%',
+        //flex: 1 w tym przypadku pozwala przewijać listę na Androidzie, na iOS można scrollowac bez tego
+        flex: 1,
+        // overflow: 'hidden',
+    },
+    listItem: {
+        backgroundColor: '#fff',
+        marginVertical: 10,
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
 })
 
