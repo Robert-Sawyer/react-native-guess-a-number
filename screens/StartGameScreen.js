@@ -1,5 +1,15 @@
 import React, {useState} from 'react'
-import {View, Text, StyleSheet, Button, TouchableWithoutFeedback, Keyboard, Alert, Dimensions} from 'react-native'
+import {
+    View,
+    Text,
+    StyleSheet,
+    Button,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Alert,
+    ScrollView,
+    KeyboardAvoidingView,
+} from 'react-native'
 import Card from "../components/Card";
 import Colors from '../constants/colors'
 import Input from "../components/Input";
@@ -74,45 +84,54 @@ const StartGameScreen = props => {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
-            <View style={styles.screen}>
-                <Text style={DefaultStyles.title}>Zagrajmy w grę!</Text>
-                {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
-                <Card style={styles.inputContainer}>
-                    <Text style={DefaultStyles.bodyText}>Wybierz liczbę od 1 do 99</Text>
-                    {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
+        <ScrollView>
+            {/*KAV jest komponentem który pomaga zmienić zachowanie klawiatury w momencie kliknięcia na inputa i
+            żeby klawiatura go nie zasłoniła. Musi sie on znajdowac wewnątrz komponentu takiego jak Scrollview i
+            przyjmuje kilka propsów, np keyboardVerticalOffset definiuje o ile px przesunie sie element gdy włączy
+            sie klawiatura - ta właściwośc przydaje się na iOS. Behavior - na iOS najlepiej zachowuje się position,
+            a na Androidzie padding*/}
+            <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={30}>
+                <TouchableWithoutFeedback onPress={handleCloseKeyboard}>
+                    <View style={styles.screen}>
+                        <Text style={DefaultStyles.title}>Zagrajmy w grę!</Text>
+                        {/*Wysyłam props style do wewnątrz komponentu Card i tam merguję go z wewnętrznymi stylami Card*/}
+                        <Card style={styles.inputContainer}>
+                            <Text style={DefaultStyles.bodyText}>Wybierz liczbę od 1 do 99</Text>
+                            {/*TextInput, któy jest wewnątrz tego inputa ma wiele opcji konfiguracji i modyfikacji wprowadzanych
                 danych - wszystko w dokumentacji. Poniżej wykorzystam tylko rodzaj klawiatury, wyłączenie autokorekty,
                 rozmycie po kliknięciu i ograniczenie liczby do 99*/}
-                    <Input
-                        style={styles.input}
-                        onChangeText={handleNumberValue}
-                        value={enteredValue}
-                        blurOnSubmit
-                        keyboardType='number-pad'
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        maxLength={2}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.button}>
-                            <Button
-                                title='Reset'
-                                color={Colors.cancelOrReset}
-                                onPress={handleResetInput}
+                            <Input
+                                style={styles.input}
+                                onChangeText={handleNumberValue}
+                                value={enteredValue}
+                                blurOnSubmit
+                                keyboardType='number-pad'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                maxLength={2}
                             />
-                        </View>
-                        <View style={styles.button}>
-                            <Button
-                                title='Potwierdź'
-                                color={Colors.confirmColor}
-                                onPress={handleConfirmInput}
-                            />
-                        </View>
+                            <View style={styles.buttonContainer}>
+                                <View style={styles.button}>
+                                    <Button
+                                        title='Reset'
+                                        color={Colors.cancelOrReset}
+                                        onPress={handleResetInput}
+                                    />
+                                </View>
+                                <View style={styles.button}>
+                                    <Button
+                                        title='Potwierdź'
+                                        color={Colors.confirmColor}
+                                        onPress={handleConfirmInput}
+                                    />
+                                </View>
+                            </View>
+                        </Card>
+                        {confirmedOutput}
                     </View>
-                </Card>
-                {confirmedOutput}
-            </View>
-        </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 
