@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View, Text, StyleSheet, Button, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native'
+import {View, Text, StyleSheet, Button, TouchableWithoutFeedback, Keyboard, Alert, Dimensions} from 'react-native'
 import Card from "../components/Card";
 import Colors from '../constants/colors'
 import Input from "../components/Input";
@@ -123,8 +123,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inputContainer: {
-        width: 300,
-        maxWidth: '80%',
+        //poniżej optymalizacja na małe urządzenia: domyślnie ramka zajmuje 80% ekranu, ale jeśli jest to mały ekran,
+        //wówczas zajmie MINIMUM 300px ALE nie więcej niż 95% szerokości, czyli może byc mniej niż 300px wtedy gdy
+        //szerokośc ekranu jest jeszcze mniejsza
+        width: '80%',
+        maxWidth: '95%',
+        minWidth: 300,
         alignItems: 'center',
     },
     input: {
@@ -139,6 +143,8 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '46%',
+        //szerokośc można też alternatywnie za pomocą Dimensions
+        // width: Dimensions.get('window').width / 3.5
     },
     confirmationInfo: {
         marginVertical: 20,

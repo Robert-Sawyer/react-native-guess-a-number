@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
-import {View, Text, StyleSheet, Button, Alert, ScrollView, FlatList} from 'react-native'
+import {View, Text, StyleSheet, Button, Alert, ScrollView, FlatList, Dimensions} from 'react-native'
 import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -134,7 +134,11 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 10,
+        //kolejna optymalizacja w zależności od rozmiarów urządzenia - jeżeli wysokośc ekranu jest większa niż 600px
+        //to wtedy zastosuj margines 20px a jeśli mniejsza to 10px
+        //Dimension można używać nie tylko wewnątrz StyleSheet ale wszędzie tam, gdzie JSa, czyli na przykład w propsach,
+        //np. style={Dimension(...) ? style.jakieśtam : style.innejakieśtam} albo w zwykłym ifie albo metodzie itd
+        marginTop: Dimensions.get('window').height > 600 ? 20 : 10,
         width: 350,
         maxWidth: '90%',
     },
@@ -149,7 +153,7 @@ const styles = StyleSheet.create({
         width: 130,
     },
     list: {
-        width: '50%',
+        width: Dimensions.get('window').width > 355 ? '55%' : '80%',
         //flex: 1 w tym przypadku pozwala przewijać listę na Androidzie, na iOS można scrollowac bez tego
         flex: 1,
         // overflow: 'hidden',
