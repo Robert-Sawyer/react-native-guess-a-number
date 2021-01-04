@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
-import {View, Text, StyleSheet, Button, Alert, ScrollView} from 'react-native'
+import {View, Text, StyleSheet, Button, Alert, ScrollView, FlatList} from 'react-native'
 import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -17,10 +17,12 @@ const generateRandomBetween = (min, max, exclude) => {
     }
 }
 
-const renderListItem = (value, numOfRounds) => (
-    <View key={value} style={styles.listItem}>
-        <Text style={DefaultStyles.bodyText}>Runda {numOfRounds}:</Text>
-        <Text style={DefaultStyles.bodyText}>{value}</Text>
+//po zmianie na FlatList, nie używam już numeru rundy, tylko korzystam z długości listy i nie muszę ustawiać klucza
+//w View ponieważ robię to wewnątrz flatList
+const renderListItem = (listLength, itemData) => (
+    <View style={styles.listItem}>
+        <Text style={DefaultStyles.bodyText}>Runda {listLength - itemData.index}:</Text>
+        <Text style={DefaultStyles.bodyText}>{itemData.item}</Text>
     </View>
 )
 
@@ -30,7 +32,7 @@ const GameScreen = props => {
     //oraz pierwotny stan w tablicy z poprzednimi zgadnięciami
     const initialGuess = generateRandomBetween(1, 100, props.userChoice)
     const [currentGuess, setCurrentGuess] = useState(initialGuess)
-    const [pastGuesses, setPastGuesses] = useState([initialGuess])
+    const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()])
 
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
@@ -77,7 +79,7 @@ const GameScreen = props => {
         const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess)
         setCurrentGuess(nextNumber)
         // setRounds(currentRound => currentRound + 1)
-        setPastGuesses(currentPastGuesses => [nextNumber, ...currentPastGuesses])
+        setPastGuesses(currentPastGuesses => [nextNumber.toString(), ...currentPastGuesses])
     }
 
     return (
@@ -106,10 +108,18 @@ const GameScreen = props => {
                 {/*w scenariuszu gdy chciałym wrzucać elementy ze zgadywaniem od dołu i nadal móc
                 je przewijać muszę w listContent dać dwie właściwości: justifyContent: 'flex-end' i
                 flexGrow: 1*/}
-                <ScrollView>
-                    {pastGuesses.map((guess, index) =>
-                        renderListItem(guess, pastGuesses.length - index))}
-                </ScrollView>
+                {/*<ScrollView>*/}
+                {/*    {pastGuesses.map((guess, index) =>*/}
+                {/*        renderListItem(guess, pastGuesses.length - index))}*/}
+                {/*</ScrollView>*/}
+
+                {/*zamieniam scrollviev na flatlist. muszę do tego ustawić key, a on musi być
+                stringiem, więc w use state i w handlenextguesses dodaję .toString() na numerze w tablicy, żeby była to
+                tablica stringów*/}
+                <FlatList
+                    keyExtractor={(item) => item}
+                    data={pastGuesses}
+                    renderItem={renderListItem.bind(this, pastGuesses.length)} />
             </View>
         </View>
     )
