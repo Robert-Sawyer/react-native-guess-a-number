@@ -19,7 +19,7 @@ const generateRandomBetween = (min, max, exclude) => {
 
 const renderListItem = (value, numOfRounds) => (
     <View key={value} style={styles.listItem}>
-        <Text style={DefaultStyles.bodyText}>Runda: {numOfRounds}</Text>
+        <Text style={DefaultStyles.bodyText}>Runda {numOfRounds}:</Text>
         <Text style={DefaultStyles.bodyText}>{value}</Text>
     </View>
 )
@@ -100,6 +100,12 @@ const GameScreen = props => {
                 </MyButton>
             </Card>
             <View style={styles.list}>
+                {/*można kontrolować style elementów wewnątrz kontenera poprzez
+                prop: contentContainerStyle={styles.listContent}. Wtedy można dodać style do listContent
+                i wówczas nada to pewne style elementom wewmątrz, np alignItems: 'center'*/}
+                {/*w scenariuszu gdy chciałym wrzucać elementy ze zgadywaniem od dołu i nadal móc
+                je przewijać muszę w listContent dać dwie właściwości: justifyContent: 'flex-end' i
+                flexGrow: 1*/}
                 <ScrollView>
                     {pastGuesses.map((guess, index) =>
                         renderListItem(guess, pastGuesses.length - index))}
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
         width: 130,
     },
     list: {
-        width: '70%',
+        width: '50%',
         //flex: 1 w tym przypadku pozwala przewijać listę na Androidzie, na iOS można scrollowac bez tego
         flex: 1,
         // overflow: 'hidden',
