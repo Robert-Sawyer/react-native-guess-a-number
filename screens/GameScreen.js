@@ -1,10 +1,11 @@
 import React, {useState, useRef, useEffect} from 'react'
-import {View, Text, StyleSheet, Button, Alert, ScrollView, FlatList, Dimensions} from 'react-native'
+import {View, Text, StyleSheet, Alert, FlatList, Dimensions} from 'react-native'
 import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import DefaultStyles from '../constants/default-styles'
 import MyButton from "../components/MyButton";
+// import * as ScreenOrientation from 'expo-screen-orientation'
 
 const generateRandomBetween = (min, max, exclude) => {
     min = Math.ceil(min)
@@ -28,14 +29,17 @@ const renderListItem = (listLength, itemData) => (
 
 
 const GameScreen = props => {
+
+    //czasami bywa przydatne też użycie ScreenOrientation z pakietu expo (działa tylko na eplikacjach zbudowanych z expo
+    //ponieważ jednak wykorzystauję już API Dimensions to niepotrzebuje tego, ale jest taka opcja
+    // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+
     //ustawiam zmienną do któej wrzucam pierwsze zgadywanie przez komputer i ustawiam jako aktualne zgadywanie
     //oraz pierwotny stan w tablicy z poprzednimi zgadnięciami
     const initialGuess = generateRandomBetween(1, 100, props.userChoice)
     const [currentGuess, setCurrentGuess] = useState(initialGuess)
     const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()])
-    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
     const [availableDeviceHeight, setAvailableDeviceHeight] = useState(Dimensions.get('window').height)
-
 
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
@@ -44,10 +48,9 @@ const GameScreen = props => {
     //dodac zależności w useEffect
     const {userChoice, onGameOver} = props
 
-    //dostosowuje wysokość i szerokosc ekranu po obróceniu telefonu
+    //dostosowuje wysokość ekranu po obróceniu telefonu
     useEffect(() => {
         const updateLayout = () => {
-            setAvailableDeviceWidth(Dimensions.get('window').width)
             setAvailableDeviceHeight(Dimensions.get('window').height)
         }
         Dimensions.addEventListener('change', updateLayout)
