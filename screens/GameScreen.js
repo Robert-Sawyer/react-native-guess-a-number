@@ -33,6 +33,9 @@ const GameScreen = props => {
     const initialGuess = generateRandomBetween(1, 100, props.userChoice)
     const [currentGuess, setCurrentGuess] = useState(initialGuess)
     const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()])
+    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
+    const [availableDeviceHeight, setAvailableDeviceHeight] = useState(Dimensions.get('window').height)
+
 
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
@@ -40,6 +43,19 @@ const GameScreen = props => {
     //destrukturyzuję propsy, by używać potem pobranych z props właściwości bez props. Robię to po to, by móc
     //dodac zależności w useEffect
     const {userChoice, onGameOver} = props
+
+    //dostosowuje wysokość i szerokosc ekranu po obróceniu telefonu
+    useEffect(() => {
+        const updateLayout = () => {
+            setAvailableDeviceWidth(Dimensions.get('window').width)
+            setAvailableDeviceHeight(Dimensions.get('window').height)
+        }
+        Dimensions.addEventListener('change', updateLayout)
+        return () => {
+            Dimensions.removeEventListener('change', updateLayout)
+
+        }
+    })
 
     //useEffect przyjmuje funkcję i będzie uruchamiać się po każdym cykl renderowania komponentu. w momencie gdy
     //komponent się odświeży / zostanie ponownie zrenderowany, useEffect uruchomi się na nowo
@@ -82,47 +98,76 @@ const GameScreen = props => {
         setPastGuesses(currentPastGuesses => [nextNumber.toString(), ...currentPastGuesses])
     }
 
-    return (
-        <View style={styles.screen}>
-            <Text style={DefaultStyles.title}>Mój typ:</Text>
-            <NumberContainer>{currentGuess}</NumberContainer>
-            <Text style={DefaultStyles.bodyText}>Czy Twoja liczba jest:</Text>
-            <Card style={styles.buttonContainer}>
-                <MyButton
-                    style={styles.firstButton}
-                    onPress={handleNextGuess.bind(this, 'lower')}>
-                    {/*w taki sposób mogę dodawać ikony do aplikacji - importuję odpowiedni zbiór z
+    if (availableDeviceHeight < 500) {
+        return (
+            <View style={styles.screen}>
+                <Text style={DefaultStyles.title}>Mój typ:</Text>
+                <View style={styles.controls}>
+                    <MyButton
+                        style={styles.firstButton}
+                        onPress={handleNextGuess.bind(this, 'lower')}>
+                        {/*w taki sposób mogę dodawać ikony do aplikacji - importuję odpowiedni zbiór z
                     expo/vertical-icons i korzystając z dokumentacji wybieram nazwę ikony oraz
                      np. wielkość i kolor*/}
-                    {/*<AntDesign name="caretdown" size={18}/> */}
-                    MNIEJSZA
-                </MyButton>
-                <MyButton style={styles.secButton} onPress={handleNextGuess.bind(this, 'greater')}>
-                    WIĘKSZA
-                </MyButton>
-            </Card>
-            <View style={styles.list}>
-                {/*można kontrolować style elementów wewnątrz kontenera poprzez
+                        {/*<AntDesign name="caretdown" size={18}/> */}
+                        MNIEJ
+                    </MyButton>
+                    <NumberContainer>{currentGuess}</NumberContainer>
+                    <MyButton style={styles.secButton} onPress={handleNextGuess.bind(this, 'greater')}>
+                        WIĘCEJ
+                    </MyButton>
+                </View>
+                <View style={styles.list}>
+                    <FlatList
+                        keyExtractor={(item) => item}
+                        data={pastGuesses}
+                        renderItem={renderListItem.bind(this, pastGuesses.length)}/>
+                </View>
+            </View>
+        )
+    } else {
+        return (
+            <View style={styles.screen}>
+                <Text style={DefaultStyles.title}>Mój typ:</Text>
+                <NumberContainer>{currentGuess}</NumberContainer>
+                <Text style={DefaultStyles.bodyText}>Czy Twoja liczba jest:</Text>
+                <Card style={styles.buttonContainer}>
+                    <MyButton
+                        style={styles.firstButton}
+                        onPress={handleNextGuess.bind(this, 'lower')}>
+                        {/*w taki sposób mogę dodawać ikony do aplikacji - importuję odpowiedni zbiór z
+                    expo/vertical-icons i korzystając z dokumentacji wybieram nazwę ikony oraz
+                     np. wielkość i kolor*/}
+                        {/*<AntDesign name="caretdown" size={18}/> */}
+                        MNIEJSZA
+                    </MyButton>
+                    <MyButton style={styles.secButton} onPress={handleNextGuess.bind(this, 'greater')}>
+                        WIĘKSZA
+                    </MyButton>
+                </Card>
+                <View style={styles.list}>
+                    {/*można kontrolować style elementów wewnątrz kontenera poprzez
                 prop: contentContainerStyle={styles.listContent}. Wtedy można dodać style do listContent
                 i wówczas nada to pewne style elementom wewmątrz, np alignItems: 'center'*/}
-                {/*w scenariuszu gdy chciałym wrzucać elementy ze zgadywaniem od dołu i nadal móc
+                    {/*w scenariuszu gdy chciałym wrzucać elementy ze zgadywaniem od dołu i nadal móc
                 je przewijać muszę w listContent dać dwie właściwości: justifyContent: 'flex-end' i
                 flexGrow: 1*/}
-                {/*<ScrollView>*/}
-                {/*    {pastGuesses.map((guess, index) =>*/}
-                {/*        renderListItem(guess, pastGuesses.length - index))}*/}
-                {/*</ScrollView>*/}
+                    {/*<ScrollView>*/}
+                    {/*    {pastGuesses.map((guess, index) =>*/}
+                    {/*        renderListItem(guess, pastGuesses.length - index))}*/}
+                    {/*</ScrollView>*/}
 
-                {/*zamieniam scrollviev na flatlist. muszę do tego ustawić key, a on musi być
+                    {/*zamieniam scrollviev na flatlist. muszę do tego ustawić key, a on musi być
                 stringiem, więc w use state i w handlenextguesses dodaję .toString() na numerze w tablicy, żeby była to
                 tablica stringów*/}
-                <FlatList
-                    keyExtractor={(item) => item}
-                    data={pastGuesses}
-                    renderItem={renderListItem.bind(this, pastGuesses.length)} />
+                    <FlatList
+                        keyExtractor={(item) => item}
+                        data={pastGuesses}
+                        renderItem={renderListItem.bind(this, pastGuesses.length)}/>
+                </View>
             </View>
-        </View>
-    )
+        )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -130,6 +175,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         alignItems: 'center',
+    },
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '80%',
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -139,7 +190,7 @@ const styles = StyleSheet.create({
         //Dimension można używać nie tylko wewnątrz StyleSheet ale wszędzie tam, gdzie JSa, czyli na przykład w propsach,
         //np. style={Dimension(...) ? style.jakieśtam : style.innejakieśtam} albo w zwykłym ifie albo metodzie itd
         marginTop: Dimensions.get('window').height > 600 ? 20 : 10,
-        width: 350,
+        width: Dimensions.get('window').width > 360 ? '70%' : '90%',
         maxWidth: '90%',
     },
     firstButton: {
