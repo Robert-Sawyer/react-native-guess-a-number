@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {View, Text, StyleSheet, Image, Dimensions, ScrollView} from 'react-native'
 import DefaultStyles from '../constants/default-styles'
 import Color from '../constants/colors'
@@ -6,11 +6,30 @@ import MyButton from "../components/MyButton";
 
 
 const GameOverScreen = props => {
+    const [imageSize, setImageSize] = useState(Dimensions.get('window').width * 0.5)
+
+
+    useEffect(() => {
+        const updateLayout = () => {
+            setImageSize(Dimensions.get('window').width * 0.5)
+        }
+        Dimensions.addEventListener('change', updateLayout)
+        return () => {
+            Dimensions.removeEventListener('change', updateLayout)
+        }
+    })
+
     return (
         <ScrollView>
             <View style={styles.screen}>
                 <Text style={DefaultStyles.title}>Gra skończona!</Text>
-                <View style={styles.imageContainer}>
+                <View style={{
+                    ...styles.imageContainer, ...{
+                        width: imageSize,
+                        height: imageSize,
+                        borderRadius: Dimensions.get('window').width * 0.7 / 2
+                    }
+                }}>
                     <Image
                         style={styles.image}
                         source={require('../assets/success.png')}
@@ -45,14 +64,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
+        marginVertical: 10,
     },
     imageContainer: {
-        borderRadius: Dimensions.get('window').width * 0.75 / 2,
+        // borderRadius: ,
         borderWidth: 3,
         borderColor: '#000',
-        width: Dimensions.get('window').width * 0.75,
-        height: Dimensions.get('window').width * 0.75,
+        // width: Dimensions.get('window').width * 0.75,
+        // height: Dimensions.get('window').width * 0.75,
         overflow: 'hidden',
         marginVertical: Dimensions.get('window').height / 30,
     },
