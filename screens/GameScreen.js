@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import {View, Text, StyleSheet, Alert, FlatList, Dimensions} from 'react-native'
-import {AntDesign} from '@expo/vector-icons'
+// import {AntDesign} from '@expo/vector-icons'
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import DefaultStyles from '../constants/default-styles'

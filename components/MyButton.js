@@ -10,6 +10,9 @@ const MyButton = props => {
         ButtonComponent = TouchableNativeFeedback
     }
 
+    //w przypadku złożonych komponentów które będa inaczej się zachowywały na różnych systemach można podzielić
+    //komponenty na dwa osobne dla ios i androida np. MyButton.ios.js ale w przypadku importu pliku w innym komponencie
+    //nalezy użyć tylko MyButton, bez rozszerzenie, React będzie wiedział którego pliku użyć
     return (
         <View style={styles.buttonContainer}>
             <ButtonComponent onPress={props.onPress}>

@@ -16,8 +16,6 @@ const fetchFonts = () => {
     return Font.loadAsync({
         'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
         'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
-        // 'jokerman': require('./assets/fonts/Jokerman.ttf'),
-        // 'jokerman-reg': require('./assets/fonts/Jokerman-Regular.ttf'),
     })
 }
 
